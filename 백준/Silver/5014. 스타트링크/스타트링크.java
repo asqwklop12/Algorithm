@@ -34,11 +34,13 @@ public class Main {
             int[] move = {x + U, x - D};
             // 이동
             for (int mx : move) {
-                if (mx <= F && mx >= 1 && dist[mx] == -1) {
-                    q.add(mx);
-                    dist[mx] = dist[x] + 1;
 
-                }
+                if(0 >= mx) continue;
+                if(F < mx) continue;
+                if(dist[mx] != -1) continue;
+
+                dist[mx] = dist[x] + 1;
+                q.add(mx);
 
             }
 
