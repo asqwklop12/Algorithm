@@ -1,0 +1,20 @@
+name: Mirror to Organization Repo
+
+on:
+  push:
+    branches:
+      - main  # <-- 미러링할 브랜치 (main 또는 master)
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 전체 히스토리 필요 (mirror는 commit 전체 동기화)
+
+      - name: Push to organization mirror
+        run: |
+          git remote add mirror https://x-access-token:${{ secrets.MIRROR_TOKEN }}@github.com/org/mirrored-repo.git
+          git push --mirror mirror
