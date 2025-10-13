@@ -1,9 +1,9 @@
-name: Mirror to Organization Repo
+name: Mirror to loopers-dongbanza
 
 on:
   push:
     branches:
-      - main  # <-- 미러링할 브랜치 (main 또는 master)
+      - main  # <-- 미러링할 브랜치명 (필요하면 수정)
 
 jobs:
   mirror:
@@ -12,9 +12,9 @@ jobs:
       - name: Checkout source repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # 전체 히스토리 필요 (mirror는 commit 전체 동기화)
+          fetch-depth: 0  # commit 전체 히스토리 동기화를 위해 필수
 
-      - name: Push to organization mirror
+      - name: Push to organization repo
         run: |
-          git remote add mirror https://x-access-token:${{ secrets.MIRROR_TOKEN }}@github.com/org/mirrored-repo.git
+          git remote add mirror https://x-access-token:${{ secrets.MIRROR_TOKEN }}@github.com/loopers-dongbanza/yonghun.git
           git push --mirror mirror
