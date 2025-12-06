@@ -1,4 +1,4 @@
-import java.math.BigInteger;
+import java.math.*;
 import java.util.*;
 
 public class Main {
