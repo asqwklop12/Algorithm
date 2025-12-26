@@ -1,6 +1,5 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.*;
+import java.io.*;
 
 public class Main {
 
@@ -13,60 +12,64 @@ public class Main {
     static int t = Integer.MAX_VALUE;
     static int ground;
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
+
         n = Integer.parseInt(st.nextToken());
         m = Integer.parseInt(st.nextToken());
-
         inventory = Integer.parseInt(st.nextToken());
 
         land = new int[n][m];
 
+        int max = -1;
+        int min = 256;
         for (int i = 0; i < n; i++) {
             st = new StringTokenizer(br.readLine());
             for (int j = 0; j < m; j++) {
                 land[i][j] = Integer.parseInt(st.nextToken());
+                max = Math.max(max, land[i][j]);
+                min = Math.min(min, land[i][j]);
             }
         }
 
-        solve();
+        solve(min, max);
 
     }
 
-    public static void solve() {
-        for (int h = 0; h <= 256; h++) {
+    public static void solve(int min, int max) {
+        for (int h = min; h <= max; h++) {
             int block = inventory;
-            int count = 0;
+            int time = 0;
             for (int i = 0; i < n; i++) {
                 for (int j = 0; j < m; j++) {
-                    // 땅의 크기가 지정된 높이보다 큰 경우
-                    if (land[i][j] > h) {
-                        int diff = land[i][j] - h;
-                        // 예를 들어 diff가 2라면 4초가 소요됨
-                        count += (diff * 2);
-                        block += diff;
-                    }
-
-                    // 지정된 높이 보다 땅의 크기가 작은 경우
-                    else if (land[i][j] < h) {
+                    // 땅이 크기가 지정된 높이보다 작으면 블럭을 채워야 한다.
+                    // 인벤토리에서 꺼내야 한다.
+                    if (land[i][j] < h) {
                         int diff = h - land[i][j];
-                        count += diff;
+                        time += diff;
                         block -= diff;
+
+                        // 땅의 크기가 지정된 높이보다 크면 블럭을 제거해야 하고
+                        // 인벤토리에 넣어야 한다.
+                    } else if (land[i][j] > h) {
+                        int diff = land[i][j] - h;
+                        time += (diff * 2);
+                        block += diff;
                     }
                 }
             }
+
+            // 블럭이 남아있다면
             if (block >= 0) {
-                if (count <= t) {
-                    t = count;
+                if (time <= t) {
+                    t = time;
                     ground = h;
                 }
-
             }
         }
 
         System.out.println(t + " " + ground);
-
     }
 
 }
