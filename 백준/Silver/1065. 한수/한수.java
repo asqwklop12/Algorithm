@@ -1,4 +1,6 @@
+import java.io.*;
 import java.util.*;
+
 public class Main {
 
     static int n;
@@ -20,22 +22,29 @@ public class Main {
         System.out.println(count);
     }
 
+    // 123 일의 자리는 3
+    // 12
     public static int check(int num) {
-        String str = String.valueOf(num);
-        // 100자리 이하인 수들은 전부 등차 수열에 만족한다.
-        if (str.length() < 3) {
+        // 2자리 이하
+        if (num < 100)
             return 1;
-        }
 
-        // 첫번째와 두번째의 차이를 구한다.
-        int diff = str.charAt(0) - str.charAt(1);
-        for (int i = 1; i < str.length() - 1; i++) {
-            int curDiff = str.charAt(i) - str.charAt(i + 1);
-            // 현재 차이와 이전 차이가 다르면 0 리턴
-            if (curDiff != diff) {
+        int prev = num % 10;
+        num /= 10;
+        int curr = num % 10;
+        num /= 10;
+
+        int diff = curr - prev;
+
+        while (num > 0) {
+            int next = num % 10;
+            num /= 10;
+
+            if (next - curr != diff) {
                 return 0;
             }
-            diff = curDiff;
+
+            curr = next;
         }
 
         return 1;
