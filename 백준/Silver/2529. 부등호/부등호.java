@@ -1,81 +1,59 @@
-import java.io.*;
 import java.util.*;
 
 public class Main {
+
     static int n;
     static char[] arr;
+    static boolean[] visited;
 
-    static boolean[] checkNum = new boolean[10];
+    static List<String> result = new ArrayList<>();
 
-    static long max = Long.MIN_VALUE;
-    static long min = Long.MAX_VALUE;
-
-    public static void main(String[] args) throws Exception {
-
+    public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
+
         n = sc.nextInt();
         arr = new char[n];
+        visited = new boolean[10];
+
         for (int i = 0; i < n; i++) {
             arr[i] = sc.next().charAt(0);
         }
 
         solve();
-        sc.close();
     }
 
+    // 0 , 1, 2, 3, 4 , n-1
+
     public static void solve() {
+
         for (int i = 0; i < 10; i++) {
-            checkNum[i] = true;
+            visited[i] = true;
             dfs(0, i, i + "");
-            checkNum[i] = false;
+            visited[i] = false;
         }
 
-        String mx = String.valueOf(max);
-
-        while (mx.length() < n + 1) {
-            mx = "0" + mx;
-        }
-
-        String mi = String.valueOf(min);
-
-        while (mi.length() < n + 1) {
-            mi = "0" + mi;
-        }
-
-        System.out.println(mx);
-        System.out.println(mi);
+        System.out.println(result.get(result.size() - 1));
+        System.out.println(result.get(0));
     }
 
     public static void dfs(int idx, int prev, String num) {
-
         if (idx == n) {
-            long n = Long.parseLong(num);
-            min = Math.min(min, n);
-            max = Math.max(max, n);
+            result.add(num);
             return;
         }
 
         for (int cur = 0; cur < 10; cur++) {
-
-            if (checkNum[cur])
+            if (visited[cur])
                 continue;
+            visited[cur] = true;
 
-            if (arr[idx] == '<') {
-                if (prev < cur) {
-                    checkNum[cur] = true;
-                    dfs(idx + 1, cur, num + cur);
-                    checkNum[cur] = false;
-                }
+            if (arr[idx] == '<' && prev < cur) {
+                dfs(idx + 1, cur, num + cur);
+            } else if (arr[idx] == '>' && prev > cur) {
+                dfs(idx + 1, cur, num + cur);
             }
 
-            if (arr[idx] == '>') {
-                if (prev > cur) {
-                    checkNum[cur] = true;
-                    dfs(idx + 1, cur, num + cur);
-                    checkNum[cur] = false;
-                }
-            }
-
+            visited[cur] = false;
         }
 
     }
